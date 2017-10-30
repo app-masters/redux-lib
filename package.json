@@ -1,6 +1,6 @@
 {
-  "name": "reduxlib",
-  "version": "1.0.0",
+  "name": "redux-lib",
+  "version": "1.0.1",
   "description": "",
   "main": "dist/index.js",
   "scripts": {
@@ -11,7 +11,15 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "events": "^1.1.1",
-    "jslib": "https://github.com/app-masters/js-lib.git"
-  }
+    "@app-masters/js-lib": "^1.0.0",
+    "events": "^1.1.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/app-masters/redux-lib.git"
+  },
+  "bugs": {
+    "url": "https://github.com/app-masters/redux-lib/issues"
+  },
+  "homepage": "https://github.com/app-masters/redux-lib#readme"
 }

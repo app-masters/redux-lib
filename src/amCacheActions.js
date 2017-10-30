@@ -1,4 +1,4 @@
-import {Http} from 'jslib';
+import {Http} from '@app-masters/js-lib';
 import AMCache from './cache';
 
 class AMCacheActions {
