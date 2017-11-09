@@ -5,7 +5,7 @@ import AMCache from "./cache";
 
 class AMActions {
 
-    static setup(storage, callback){
+    static setup(storage, callback) {
         // Validate
         if (!callback || !callback.onUncaughtError) throw "You must pass callback parameter to AMActions.setup, with onUncaughtError methods.";
 
@@ -19,9 +19,6 @@ class AMActions {
 
     constructor(config) {
         // Validate config
-        if (AMActions.onUncaught === null){
-            throw new Error("You must call AMActions.setup first. Please, read the readme at redux-lib.");
-        }
         if (!config.validateObject || (typeof config.validateObject) !== "function") {
             console.warn('Your config', config);
             throw new Error("Every action must have a validateObject function on config");
@@ -36,8 +33,14 @@ class AMActions {
         this.config = config;
     }
 
+    validateSetup = () => {
+        if (AMActions.onUncaught === null) {
+            throw new Error("You must call AMActions.setup first. Please, read the readme at redux-lib.");
+        }
+    };
 
     getObjects = (sort, populate, filter) => {
+        this.validateSetup();
         return (dispatch) => {
             this.setLoading(dispatch, true);
             this.setError(dispatch, null);
@@ -50,8 +53,8 @@ class AMActions {
                 url += '&populate=' + populate;
                 // console.warn("populate2",populate);
             }
-            if (filter){
-                url += '&'+filter;
+            if (filter) {
+                url += '&' + filter;
             }
             Http.get(url)
                 .then(response => {
@@ -111,7 +114,7 @@ class AMActions {
         }
     };
 
-    newObject = (dispatch)=> {
+    newObject = (dispatch) => {
         return (dispatch) => {
             this.setLoading(dispatch, false);
             this.setError(dispatch, null);
@@ -120,12 +123,13 @@ class AMActions {
     };
 
     prepareForm = (match, populate) => {
+        this.validateSetup();
         // console.log('match', match);
         if (match && match.params.id !== 'new') {
             // Editing
             // TODO: Corrigir o get object para não popular formulários complexos
             // Forcing populate when giving param
-            populate = (populate) ? populate : false; 
+            populate = (populate) ? populate : false;
             return this.getObject(match.params.id, populate);
         } else {
             // Inserting
@@ -248,11 +252,11 @@ class AMActions {
         console.log('teste');
     };
 
-    type = (action)=> {
+    type = (action) => {
         return this.config.typePrefix + '_' + action;
     };
 
-    setLoading = (dispatch, loading)=> {
+    setLoading = (dispatch, loading) => {
         dispatch({type: this.type('LOADING'), payload: loading});
     };
 
@@ -267,7 +271,7 @@ class AMActions {
     }
 
     onUncaught = (error) => {
-        if (AMActions.onUncaught){
+        if (AMActions.onUncaught) {
             AMActions.onUncaught(error);
         } else {
             console.warn("!!! onError not setted on AMCacheActions !!!");
@@ -276,6 +280,7 @@ class AMActions {
         console.error(error);
     }
 }
+
 AMActions.callbacks = {};
 AMActions.onUncaught = null;
 

@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
-## [1.0.3] - 2017-11-9
+## [1.0.3 / 1.0.4] - 2017-11-9
 ### Added
 - AMActions.setup() method
 

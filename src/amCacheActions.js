@@ -4,9 +4,6 @@ import AMCache from './cache';
 class AMCacheActions {
     constructor(config) {
         // Validate config
-        if (AMCacheActions.onUncaught === null){
-            throw new Error("You must call AMActions.setup first. Please, read the readme at redux-lib.");
-        }
         if (!config.validateObject || (typeof config.validateObject) !== "function") {
             console.log('Your config', config);
             throw new Error("Every action must have a validateObject function on config");
@@ -26,6 +23,11 @@ class AMCacheActions {
         this.config = config;
     }
 
+    validateSetup = () => {
+        if (AMCacheActions.onUncaught === null) {
+            throw new Error("You must call AMActions.setup first. Please, read the readme at redux-lib.");
+        }
+    };
 
     //// GENERIC METHOS to work for all promisses and possibilities here
 
@@ -87,6 +89,7 @@ class AMCacheActions {
     // 4 - Online - Obter online apenas
 
     doGet = (cacheStrategy, alwaysReturn, promiseOnline, promiseCache) => {
+        this.validateSetup();
         // console.log("doGet", cacheStrategy);
         if (cacheStrategy === 'CacheOnline') {
             this.doGetCacheOnline(alwaysReturn, promiseOnline, promiseCache);
@@ -104,6 +107,7 @@ class AMCacheActions {
 
 // 1 - CacheOnline - Obter do cache, depois online
     doGetCacheOnline = (alwaysReturn, promiseOnline, promiseCache) => {
+        this.validateSetup();
         // console.log("doGetCacheOnline");
         promiseCache().then(result => {
             // console.log('promiseCache result', result);
@@ -123,6 +127,7 @@ class AMCacheActions {
     };
 
     doGetCache = (alwaysReturn, promiseCache) => {
+        this.validateSetup();
         // console.log("doGetCache");
         promiseCache().then(result => {
             // console.log('promiseCache result', result);
@@ -132,6 +137,7 @@ class AMCacheActions {
         });
     };
     doGetCacheEmptyOnline = (alwaysReturn, promiseOnline, promiseCache) => {
+        this.validateSetup();
         // console.log("doGetCacheEmptyOnline");
         promiseCache().then(result => {
             // console.log('promiseCache result', result);
@@ -149,6 +155,7 @@ class AMCacheActions {
         });
     };
     doGetOnline = (alwaysReturn, promiseOnline) => {
+        this.validateSetup();
         // console.log("doGetOnline");
         promiseOnline().then(result => {
             alwaysReturn(result, false, true)
@@ -596,5 +603,6 @@ class AMCacheActions {
     }
 
 }
+AMCacheActions.onUncaught = null;
 
 export default AMCacheActions;
