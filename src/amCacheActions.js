@@ -3,8 +3,10 @@ import AMCache from './cache';
 
 class AMCacheActions {
     constructor(config) {
-        // console.log('constructor', config.typePrefix);
         // Validate config
+        if (AMCacheActions.onUncaught === null){
+            throw new Error("You must call AMActions.setup first. Please, read the readme at redux-lib.");
+        }
         if (!config.validateObject || (typeof config.validateObject) !== "function") {
             console.log('Your config', config);
             throw new Error("Every action must have a validateObject function on config");

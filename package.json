@@ -1,6 +1,6 @@
 {
-  "name": "redux-lib",
-  "version": "1.0.1",
+  "name": "@app-masters/redux-lib",
+  "version": "1.0.3",
   "description": "",
   "main": "dist/index.js",
   "scripts": {

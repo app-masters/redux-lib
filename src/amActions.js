@@ -1,9 +1,27 @@
 import {Http} from '@app-masters/js-lib';
+import AMCacheActions from "./amCacheActions";
+import AMCache from "./cache";
+
 
 class AMActions {
+
+    static setup(storage, callback){
+        // Validate
+        if (!callback || !callback.onUncaughtError) throw "You must pass callback parameter to AMActions.setup, with onUncaughtError methods.";
+
+        // Set it here
+        AMCache.setStorage(storage);
+        AMActions.callbacks = callback;
+        AMActions.onUncaughtError(callback.onUncaughtError);
+        AMCacheActions.onUncaughtError(callback.onUncaughtError);
+    }
+
+
     constructor(config) {
-        // console.log('constructor', config.typePrefix);
         // Validate config
+        if (AMActions.onUncaught === null){
+            throw new Error("You must call AMActions.setup first. Please, read the readme at redux-lib.");
+        }
         if (!config.validateObject || (typeof config.validateObject) !== "function") {
             console.warn('Your config', config);
             throw new Error("Every action must have a validateObject function on config");
@@ -258,5 +276,7 @@ class AMActions {
         console.error(error);
     }
 }
+AMActions.callbacks = {};
+AMActions.onUncaught = null;
 
 export default AMActions;
