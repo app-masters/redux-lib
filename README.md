@@ -14,13 +14,13 @@ Setup (callbacks are the same object used with AppBoostrap.setup()).
         alert('Bem vindo à nova versão!');
     },
     onUncaughtError: (e) => {
+        Rollbar.error(e);
         alert("Houve um erro inesperado e os programadores responsáveis já foram avisados. \n\n Detalhes técnicos: " + e.message);
     }
   };
 
   AMActions.setup(storage, callbacks);
 ```
-
 
 # Change Log
 

@@ -4,7 +4,6 @@ import AMCache from "./cache";
 
 
 class AMActions {
-
     static setup(storage, callback) {
         // Validate
         if (!callback || !callback.onUncaughtError) throw "You must pass callback parameter to AMActions.setup, with onUncaughtError methods.";
