@@ -21,6 +21,8 @@ class AMCacheActions {
 
         // Save it here
         this.config = config;
+        this.syncRecords = [];
+        this.syncRecordsCount = 0;
     }
 
     validateSetup = () => {
@@ -57,7 +59,7 @@ class AMCacheActions {
                 // console.log('2result', result);
                 alwaysReturn(result, false, true);
             });
-        }).catch(err=>{
+        }).catch(err => {
             this.onUncaught(err);
         });
     };
@@ -67,7 +69,7 @@ class AMCacheActions {
         // console.log("doSaveCache");
         promiseCache().then(result => {
             alwaysReturn(result, true, true)
-        }).catch(err=>{
+        }).catch(err => {
             this.onUncaught(err);
         });
     };
@@ -77,7 +79,7 @@ class AMCacheActions {
         // console.log("doSaveOnline");
         promiseOnline().then(result => {
             alwaysReturn(result, false, true)
-        }).catch(err=>{
+        }).catch(err => {
             this.onUncaught(err);
         });
     };
@@ -117,11 +119,11 @@ class AMCacheActions {
             }
             alwaysReturn(result, true, false);
             // setTimeout(() => {
-                promiseOnline().then(result => {
-                    alwaysReturn(result, false, true)
-                })
+            promiseOnline().then(result => {
+                alwaysReturn(result, false, true)
+            })
             // }, 3000);
-        }).catch(err=>{
+        }).catch(err => {
             this.onUncaught(err);
         });
     };
@@ -130,9 +132,24 @@ class AMCacheActions {
         this.validateSetup();
         // console.log("doGetCache");
         promiseCache().then(result => {
-            // console.log('promiseCache result', result);
+            console.log('promiseCache result', result);
+
+            // count fake records
+            this.syncRecords = [];
+            let fakesCount = result.reduce((count, record) => {
+                // console.log(record);
+                // console.log(record._id);
+                if (record && record._id && record._id.indexOf("fake") > -1) {
+                    this.syncRecords.push(record);
+                    return count + 1;
+                } else
+                    return count;
+            }, 0);
+            // console.log("fakesCount", fakesCount);
+            this.syncRecordsCount = fakesCount;
+
             alwaysReturn(result, true, true);
-        }).catch(err=>{
+        }).catch(err => {
             this.onUncaught(err);
         });
     };
@@ -145,12 +162,12 @@ class AMCacheActions {
             alwaysReturn(result, true, false);
             if (!result || result.length === 0) {
                 // setTimeout(() => {
-                    promiseOnline().then(result => {
-                        alwaysReturn(result, false, true)
-                    });
+                promiseOnline().then(result => {
+                    alwaysReturn(result, false, true)
+                });
                 // }, 1000);
             }
-        }).catch(err=>{
+        }).catch(err => {
             this.onUncaught(err);
         });
     };
@@ -159,7 +176,7 @@ class AMCacheActions {
         // console.log("doGetOnline");
         promiseOnline().then(result => {
             alwaysReturn(result, false, true)
-        }).catch(err=>{
+        }).catch(err => {
             this.onUncaught(err);
         });
     };
@@ -371,6 +388,8 @@ class AMCacheActions {
                     else
                         console.log('from where??');
 
+
+
                     // console.log("createObject.sempreRetornar", response);
                     this.dispatchSaveObject(dispatch, response, 'CREATE_OBJECT');
                 };
@@ -495,12 +514,67 @@ class AMCacheActions {
         };
     };
 
+    deleteSyncData = () => {
+        return (dispatch) => {
+
+            try {
+                this.setLoading(dispatch, true, this.config.cacheStrategy !== 'Online', this.config.cacheStrategy !== 'Cache');
+                this.setError(dispatch, null);
+
+                // Get fake ids
+                let syncRecords = this.getSyncData();
+                let ids = [];
+                for (let record of syncRecords) {
+                    console.log(record);
+                    ids.push(record._id);
+                }
+                console.log(ids);
+
+                // Everymotherfuckercase
+                let sempreRetornar = (response, fromCache, final) => {
+                    if (final === true)
+                        this.setLoading(dispatch, false, false, false);
+                    else if (fromCache === true)
+                        this.setLoadingFrom(dispatch, 'CACHE', false);
+                    else if (fromCache === false)
+                        this.setLoadingFrom(dispatch, 'ONLINE', false);
+                    else
+                        console.log('from where??');
+
+                    this.syncRecords = [];
+                    this.syncRecordsCount = 0;
+
+                    // console.log("updateObject.sempreRetornar");
+                    this._dispatchDeleteObject(dispatch, ids);
+                };
+                let promessaCache = () => {
+                    // console.log("updateObject.promessaCache");
+                    this.setLoadingFrom(dispatch, 'CACHE', true);
+                    return AMCache.delObjects(this.config.typePrefix, ids);
+                };
+
+                this.doSave(this.config.cacheStrategy, sempreRetornar, promessaCache, null);
+            } catch (error) {
+                this.onUncaught(err);
+                this.setError(dispatch, error);
+            }
+        };
+    };
+
     _deleteObject(id) {
         return Http.delete(this.config.endPoint + id);
     }
 
     _dispatchDeleteObject(dispatch, id) {
-        dispatch({type: this.type('DELETE_OBJECT'), payload: id});
+        console.log("constructorName", id.constructor.name);
+        if (id.constructor.name === "Array") {
+            id.map(oId => {
+                dispatch({type: this.type('DELETE_OBJECT'), payload: oId});
+            });
+        } else {
+            dispatch({type: this.type('DELETE_OBJECT'), payload: id});
+        }
+
     }
 
     /* OTHER ACTIONS */
@@ -586,6 +660,30 @@ class AMCacheActions {
     };
 
 
+    hasSyncData = () => {
+        return this.getCountSyncData() > 0;
+    };
+
+    getCountSyncData = () => {
+        return this.syncRecordsCount;
+    };
+
+    getSyncData = () => {
+        return this.syncRecords;
+    }
+
+    // clearSyncData = async () => {
+    //     let syncRecords = this.getSyncData();
+    //     let ids = [];
+    //     for (let record of syncRecords) {
+    //         console.log(record);
+    //         ids.push(record._id);
+    //     }
+    //     console.log(ids);
+    //     let ok = await AMCache.delObjects(this.config.typePrefix, ids);
+    //     console.log(ok);
+    // }
+
     /// UncaughtError handlers
 
     static onUncaughtError(cbUncaughtError) {
@@ -603,6 +701,7 @@ class AMCacheActions {
     }
 
 }
+
 AMCacheActions.onUncaught = null;
 
 export default AMCacheActions;

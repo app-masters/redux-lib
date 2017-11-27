@@ -1,6 +1,6 @@
 {
   "name": "@app-masters/redux-lib",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "",
   "main": "dist/index.js",
   "scripts": {
@@ -11,7 +11,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@app-masters/js-lib": "^1.0.0",
+    "@app-masters/js-lib": "^1.0.8",
     "events": "^1.1.1"
   },
   "repository": {

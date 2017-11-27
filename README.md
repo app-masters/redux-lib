@@ -22,6 +22,19 @@ Setup (callbacks are the same object used with AppBoostrap.setup()).
   AMActions.setup(storage, callbacks);
 ```
 
+## AMCacheActions
+
+
+### Working with offline data
+
+```
+action.hasSyncData - tell you if have some local record
+action.getCountSyncData - will return the count of local records
+action.getSyncData - will return all local records
+... sync your data like you want ...
+action.deleteSyncData (dispatch) - will remove all local record (after you sync)
+```
+
 # Change Log
 
 Check all changes on [changelog](CHANGELOG.md).

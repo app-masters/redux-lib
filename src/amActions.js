@@ -2,7 +2,6 @@ import {Http} from '@app-masters/js-lib';
 import AMCacheActions from "./amCacheActions";
 import AMCache from "./cache";
 
-
 class AMActions {
     static setup(storage, callback) {
         // Validate
