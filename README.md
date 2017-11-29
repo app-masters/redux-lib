@@ -25,13 +25,25 @@ Setup (callbacks are the same object used with AppBoostrap.setup()).
 ## AMCacheActions
 
 
-### Working with offline data
+### Working with offline and sync data 
 
 ```
+When you want to save some record, JUST ON CACHE, call saveObjectCache() otherwise saveObject(). It will save the record just locally, on cache.
+
+...
+
+To check for offline data: 
 action.hasSyncData - tell you if have some local record
 action.getCountSyncData - will return the count of local records
+
+...
+
+To get that records:
 action.getSyncData - will return all local records
-... sync your data like you want ...
+
+... 
+
+After you sync your data, you can clean offline records:
 action.deleteSyncData (dispatch) - will remove all local record (after you sync)
 ```
 
