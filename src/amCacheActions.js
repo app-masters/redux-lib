@@ -331,7 +331,7 @@ class AMCacheActions {
     }
 
 
-    saveObject = (input) => {
+    saveObject = (input, justCache) => {
         let error = this._validateObject(input);
         if (error)
             return (dispatch) => {
@@ -340,10 +340,14 @@ class AMCacheActions {
 
         // console.log('saveObject', input);
         if (input._id) {
-            return this.updateObject(input);
+            return this.updateObject(input, justCache);
         } else {
-            return this.createObject(input);
+            return this.createObject(input, justCache);
         }
+    };
+
+    saveObjectCache = (input) => {
+        return this.saveObject(input, true);
     };
 
     newObject = (dispatch) => {
@@ -366,7 +370,7 @@ class AMCacheActions {
         }
     };
 
-    createObject = (input) => {
+    createObject = (input, justCache) => {
 
         // console.log('createObject ' + input);
         return (dispatch) => {
@@ -405,6 +409,9 @@ class AMCacheActions {
                     return this._createObject(input);
                 };
 
+                if (justCache)
+                    promessaOnline = null;
+
                 this.doSave(this.config.cacheStrategy, sempreRetornar, promessaCache, promessaOnline);
             } catch (err) {
                 this.onUncaught(err);
@@ -418,7 +425,7 @@ class AMCacheActions {
 
     /* UPDATE */
 
-    updateObject = (input) => {
+    updateObject = (input, justCache) => {
         // console.log('updateObject ' + input);
         return (dispatch) => {
 
@@ -454,6 +461,10 @@ class AMCacheActions {
                     this.setLoadingFrom(dispatch, 'ONLINE', true);
                     return this._updateObject(id, input);
                 };
+
+                if (justCache)
+                    promessaOnline = null;
+
 
                 this.doSave(this.config.cacheStrategy, sempreRetornar, promessaCache, promessaOnline);
             } catch (err) {
