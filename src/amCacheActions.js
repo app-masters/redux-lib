@@ -14,7 +14,7 @@ class AMCacheActions {
             throw new Error("You must set your config! Please set at least: typePrefix, endPoint, defaultSort, singularTitle, pluralTitle");
         }
 
-        if (!config.cacheStrategy || ['CacheOnline', 'CacheEmptyOnline','Cache','Online'].indexOf(config.cacheStrategy)<0) {
+        if (!config.cacheStrategy || ['CacheOnline', 'CacheEmptyOnline', 'Cache', 'Online'].indexOf(config.cacheStrategy) < 0) {
             console.warn(config.typePrefix + ' withou cacheStrategy defined. Using CacheOnline now');
             config.cacheStrategy = 'CacheOnline';
         }
@@ -133,26 +133,29 @@ class AMCacheActions {
         // console.log("doGetCache");
         promiseCache().then(result => {
             console.log('promiseCache result', result);
-
-            // count fake records
-            this.syncRecords = [];
-            let fakesCount = result.reduce((count, record) => {
-                // console.log(record);
-                // console.log(record._id);
-                if (record && record._id && record._id.indexOf("fake") > -1) {
-                    this.syncRecords.push(record);
-                    return count + 1;
-                } else
-                    return count;
-            }, 0);
-            // console.log("fakesCount", fakesCount);
-            this.syncRecordsCount = fakesCount;
-
+            this._countFakeRecords(result);
             alwaysReturn(result, true, true);
         }).catch(err => {
             this.onUncaught(err);
         });
     };
+
+    _countFakeRecords(result) {
+        // count fake records
+        this.syncRecords = [];
+        // console.log("fakesCount", fakesCount);
+        this.syncRecordsCount = result.reduce((count, record) => {
+            // console.log(record);
+            // console.log(record._id);
+            if (record && record._id && record._id.indexOf("fake") > -1) {
+                this.syncRecords.push(record);
+                return count + 1;
+            } else
+                return count;
+        }, 0);
+        return this.syncRecordsCount;
+    }
+
     doGetCacheEmptyOnline = (alwaysReturn, promiseOnline, promiseCache) => {
         this.validateSetup();
         // console.log("doGetCacheEmptyOnline");
@@ -371,8 +374,6 @@ class AMCacheActions {
     };
 
     createObject = (input, justCache) => {
-
-        // console.log('createObject ' + input);
         return (dispatch) => {
 
             try {
@@ -392,18 +393,13 @@ class AMCacheActions {
                     else
                         console.log('from where??');
 
-
-
-                    // console.log("createObject.sempreRetornar", response);
                     this.dispatchSaveObject(dispatch, response, 'CREATE_OBJECT');
                 };
                 let promessaCache = () => {
-                    // console.log("createObject.promessaCache", input);
                     this.setLoadingFrom(dispatch, 'CACHE', true);
                     return AMCache.addObjects(this.config.typePrefix, [input]);
                 };
                 let promessaOnline = () => {
-                    // console.log("createObject.promessaOnline", input);
                     this.setLoadingFrom(dispatch, 'ONLINE', true);
                     delete input['_id'];
                     return this._createObject(input);
@@ -464,7 +460,6 @@ class AMCacheActions {
 
                 if (justCache)
                     promessaOnline = null;
-
 
                 this.doSave(this.config.cacheStrategy, sempreRetornar, promessaCache, promessaOnline);
             } catch (err) {
@@ -671,7 +666,10 @@ class AMCacheActions {
     };
 
 
-    hasSyncData = () => {
+    hasSyncData = async () => {
+        // Duplicated code from "promessaCache" on getObjects
+        let records = await AMCache.getObjects(this.config.typePrefix);
+        this._countFakeRecords(records);
         return this.getCountSyncData() > 0;
     };
 
