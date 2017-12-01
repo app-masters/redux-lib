@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
-## [1.0.7 / 1.0.8] - 2017-12-01
+## [1.0.7 / 1.0.9] - 2017-12-01
 ### Added
 - saveObjectCache added to AMCacheActions
 
