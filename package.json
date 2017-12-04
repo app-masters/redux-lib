@@ -22,5 +22,9 @@
   "bugs": {
     "url": "https://github.com/app-masters/redux-lib/issues"
   },
-  "homepage": "https://github.com/app-masters/redux-lib#readme"
+  "homepage": "https://github.com/app-masters/redux-lib#readme",
+  "devDependencies": {
+    "babel-plugin-transform-class-properties": "^6.24.1",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0"
+  }
 }
