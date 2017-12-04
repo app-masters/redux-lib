@@ -6,9 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
-## [1.0.10] - 2017-12-04
+## [1.0.10 / 1.0.11] - 2017-12-04
 ### Fixed
 - babel.rc dependencies added
+- _countFakeRecords prepared to 0 records
 
 ## [1.0.7 / 1.0.9] - 2017-12-01
 ### Added
