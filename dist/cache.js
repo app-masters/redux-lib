@@ -4,20 +4,28 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+var _typeof2 = require('babel-runtime/helpers/typeof');
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+var _typeof3 = _interopRequireDefault(_typeof2);
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+var _classCallCheck2 = require('babel-runtime/helpers/classCallCheck');
+
+var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+
+var _createClass2 = require('babel-runtime/helpers/createClass');
+
+var _createClass3 = _interopRequireDefault(_createClass2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var storage;
 
 var AMCache = function () {
     function AMCache() {
-        _classCallCheck(this, AMCache);
+        (0, _classCallCheck3.default)(this, AMCache);
     }
 
-    _createClass(AMCache, null, [{
+    (0, _createClass3.default)(AMCache, null, [{
         key: 'addObjects',
 
         /* CREATE/UPDATE */
@@ -39,7 +47,7 @@ var AMCache = function () {
                     }
 
                     if (Object.prototype.toString.call(cache) !== '[object Array]' && !replaceAll) {
-                        console.warn('cache are not an array of objects', typeof cache === 'undefined' ? 'undefined' : _typeof(cache));
+                        console.warn('cache are not an array of objects', typeof cache === 'undefined' ? 'undefined' : (0, _typeof3.default)(cache));
                         cache = null;
                         console.warn('cache will be null');
                     }
@@ -116,7 +124,7 @@ var AMCache = function () {
                     // console.log('cache', cache);
 
                     if (Object.prototype.toString.call(cache) !== '[object Array]') {
-                        console.warn('cache are not an array of objects', typeof cache === 'undefined' ? 'undefined' : _typeof(cache));
+                        console.warn('cache are not an array of objects', typeof cache === 'undefined' ? 'undefined' : (0, _typeof3.default)(cache));
                         cache = null;
                         console.warn('cache will be null');
                     }
@@ -232,7 +240,6 @@ var AMCache = function () {
             return str.replace(new RegExp(find, 'g'), replace);
         }
     }]);
-
     return AMCache;
 }();
 
