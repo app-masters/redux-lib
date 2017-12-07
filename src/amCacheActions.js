@@ -1,17 +1,17 @@
-import {Http} from '@app-masters/js-lib';
+import { Http } from '@app-masters/js-lib';
 import AMCache from './cache';
 
 class AMCacheActions {
-    constructor(config) {
+    constructor (config) {
         // Validate config
-        if (!config.validateObject || (typeof config.validateObject) !== "function") {
+        if (!config.validateObject || (typeof config.validateObject) !== 'function') {
             console.log('Your config', config);
-            throw new Error("Every action must have a validateObject function on config");
+            throw new Error('Every action must have a validateObject function on config');
         }
 
         if (!config.typePrefix || !config.endPoint || !config.defaultSort || !config.singularTitle || !config.pluralTitle) {
             console.log('Your config', config);
-            throw new Error("You must set your config! Please set at least: typePrefix, endPoint, defaultSort, singularTitle, pluralTitle");
+            throw new Error('You must set your config! Please set at least: typePrefix, endPoint, defaultSort, singularTitle, pluralTitle');
         }
 
         if (!config.cacheStrategy || ['CacheOnline', 'CacheEmptyOnline', 'Cache', 'Online'].indexOf(config.cacheStrategy) < 0) {
@@ -27,7 +27,7 @@ class AMCacheActions {
 
     validateSetup = () => {
         if (AMCacheActions.onUncaught === null) {
-            throw new Error("You must call AMActions.setup first. Please, read the readme at redux-lib.");
+            throw new Error('You must call AMActions.setup first. Please, read the readme at redux-lib.');
         }
     };
 
@@ -39,7 +39,7 @@ class AMCacheActions {
     // 4 - Online - Obter online apenas
 
     doSave = (cacheStrategy, alwaysReturn, promiseCache, promiseOnline) => {
-        console.log("doSave", cacheStrategy);
+        console.log('doSave', cacheStrategy);
         if (cacheStrategy === 'CacheOnline' || cacheStrategy === 'CacheEmptyOnline') {
             this.doSaveCacheOnline(alwaysReturn, promiseCache, promiseOnline);
         } else if (cacheStrategy === 'Cache') {
@@ -68,7 +68,7 @@ class AMCacheActions {
     doSaveCache = (alwaysReturn, promiseCache) => {
         // console.log("doSaveCache");
         promiseCache().then(result => {
-            alwaysReturn(result, true, true)
+            alwaysReturn(result, true, true);
         }).catch(err => {
             this.onUncaught(err);
         });
@@ -78,12 +78,11 @@ class AMCacheActions {
     doSaveOnline = (alwaysReturn, promiseOnline) => {
         // console.log("doSaveOnline");
         promiseOnline().then(result => {
-            alwaysReturn(result, false, true)
+            alwaysReturn(result, false, true);
         }).catch(err => {
             this.onUncaught(err);
         });
     };
-
 
     // 1 - CacheOnline - Obter do cache, depois online
     // 2 - Cache - Obter do cache apenas
@@ -120,8 +119,8 @@ class AMCacheActions {
             alwaysReturn(result, true, false);
             // setTimeout(() => {
             promiseOnline().then(result => {
-                alwaysReturn(result, false, true)
-            })
+                alwaysReturn(result, false, true);
+            });
             // }, 3000);
         }).catch(err => {
             this.onUncaught(err);
@@ -140,20 +139,24 @@ class AMCacheActions {
         });
     };
 
-    _countFakeRecords(result) {
+    _countFakeRecords (records) {
         // count fake records
         this.syncRecords = [];
         // console.log("fakesCount", fakesCount);
-        this.syncRecordsCount = result.reduce((count, record) => {
-            // console.log(record);
-            // console.log(record._id);
-            if (record && record._id && record._id.indexOf("fake") > -1) {
-                this.syncRecords.push(record);
-                return count + 1;
-            } else
-                return count;
-        }, 0);
-        return this.syncRecordsCount;
+        if (!records) {
+            this.syncRecordsCount = 0;
+        } else {
+            this.syncRecordsCount = records.reduce((count, record) => {
+                // console.log(record);
+                // console.log(record._id);
+                if (record && record._id && record._id.indexOf('fake') > -1) {
+                    this.syncRecords.push(record);
+                    return count + 1;
+                } else
+                    return count;
+            }, 0);
+            return this.syncRecordsCount;
+        }
     }
 
     doGetCacheEmptyOnline = (alwaysReturn, promiseOnline, promiseCache) => {
@@ -166,7 +169,7 @@ class AMCacheActions {
             if (!result || result.length === 0) {
                 // setTimeout(() => {
                 promiseOnline().then(result => {
-                    alwaysReturn(result, false, true)
+                    alwaysReturn(result, false, true);
                 });
                 // }, 1000);
             }
@@ -178,12 +181,11 @@ class AMCacheActions {
         this.validateSetup();
         // console.log("doGetOnline");
         promiseOnline().then(result => {
-            alwaysReturn(result, false, true)
+            alwaysReturn(result, false, true);
         }).catch(err => {
             this.onUncaught(err);
         });
     };
-
 
     // cache ok
     getObjects = (sort, populate, filter) => {
@@ -225,7 +227,7 @@ class AMCacheActions {
         };
     };
 
-    dispatchGetObjects(dispatch, response, fromCache, filter) {
+    dispatchGetObjects (dispatch, response, fromCache, filter) {
         // console.log('fromCache',fromCache);
         // console.log('filter',filter);
         if (Object.prototype.toString.call(response) === '[object Array]')
@@ -250,7 +252,7 @@ class AMCacheActions {
         }
     }
 
-    _getObjects(sort, populate, filter) {
+    _getObjects (sort, populate, filter) {
         let url = this.config.endPoint;
         sort = (sort ? sort : this.config.defaultSort);
         populate = (populate ? populate : this.config.defaultPopulate);
@@ -305,7 +307,7 @@ class AMCacheActions {
 
     };
 
-    _getObject(id, populate) {
+    _getObject (id, populate) {
         let url = this.config.endPoint + id;
         if (populate !== false) {
             populate = (populate ? populate : this.config.defaultPopulate);
@@ -314,7 +316,7 @@ class AMCacheActions {
         return Http.get(url);
     }
 
-    dispatchGetObject(dispatch, response, fromCache) {
+    dispatchGetObject (dispatch, response, fromCache) {
         // console.log('aa',Object.prototype.toString.call(response));
         if (Object.prototype.toString.call(response) === '[object Object]')
             response = this.prepareToClient(response);
@@ -332,7 +334,6 @@ class AMCacheActions {
             this.setLoading(dispatch, false);
         }
     }
-
 
     saveObject = (input, justCache) => {
         let error = this._validateObject(input);
@@ -468,11 +469,11 @@ class AMCacheActions {
         };
     };
 
-    _updateObject(id, input) {
+    _updateObject (id, input) {
         return Http.put(this.config.endPoint + id, input);
     }
 
-    dispatchSaveObject(dispatch, response, secondaryAction) {
+    dispatchSaveObject (dispatch, response, secondaryAction) {
         dispatch({type: this.type(secondaryAction), payload: this.prepareToClient(response)}); // broadcast
         dispatch({type: this.type('SAVE_OBJECT'), payload: this.prepareToClient(response)});
         this.setLoading(dispatch, false);
@@ -567,13 +568,13 @@ class AMCacheActions {
         };
     };
 
-    _deleteObject(id) {
+    _deleteObject (id) {
         return Http.delete(this.config.endPoint + id);
     }
 
-    _dispatchDeleteObject(dispatch, id) {
-        console.log("constructorName", id.constructor.name);
-        if (id.constructor.name === "Array") {
+    _dispatchDeleteObject (dispatch, id) {
+        console.log('constructorName', id.constructor.name);
+        if (id.constructor.name === 'Array') {
             id.map(oId => {
                 dispatch({type: this.type('DELETE_OBJECT'), payload: oId});
             });
@@ -665,7 +666,6 @@ class AMCacheActions {
         dispatch({type: this.type('ERROR'), payload: error});
     };
 
-
     hasSyncData = async () => {
         // Duplicated code from "promessaCache" on getObjects
         let records = await AMCache.getObjects(this.config.typePrefix);
@@ -679,7 +679,7 @@ class AMCacheActions {
 
     getSyncData = () => {
         return this.syncRecords;
-    }
+    };
 
     // clearSyncData = async () => {
     //     let syncRecords = this.getSyncData();
@@ -695,7 +695,7 @@ class AMCacheActions {
 
     /// UncaughtError handlers
 
-    static onUncaughtError(cbUncaughtError) {
+    static onUncaughtError (cbUncaughtError) {
         AMCacheActions.onUncaught = cbUncaughtError;
     }
 
@@ -703,11 +703,11 @@ class AMCacheActions {
         if (AMCacheActions.onUncaught) {
             AMCacheActions.onUncaught(error);
         } else {
-            console.warn("!!! onError not setted on AMActions !!!");
+            console.warn('!!! onError not setted on AMActions !!!');
             console.log(error);
         }
         console.error(error);
-    }
+    };
 
 }
 
