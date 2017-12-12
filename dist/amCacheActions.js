@@ -36,12 +36,12 @@ var AMCacheActions = function () {
 
         this.validateSetup = function () {
             if (AMCacheActions.onUncaught === null) {
-                throw new Error("You must call AMActions.setup first. Please, read the readme at redux-lib.");
+                throw new Error('You must call AMActions.setup first. Please, read the readme at redux-lib.');
             }
         };
 
         this.doSave = function (cacheStrategy, alwaysReturn, promiseCache, promiseOnline) {
-            console.log("doSave", cacheStrategy);
+            console.log('doSave', cacheStrategy);
             if (cacheStrategy === 'CacheOnline' || cacheStrategy === 'CacheEmptyOnline') {
                 _this.doSaveCacheOnline(alwaysReturn, promiseCache, promiseOnline);
             } else if (cacheStrategy === 'Cache') {
@@ -544,21 +544,21 @@ var AMCacheActions = function () {
             if (AMCacheActions.onUncaught) {
                 AMCacheActions.onUncaught(error);
             } else {
-                console.warn("!!! onError not setted on AMActions !!!");
+                console.warn('!!! onError not setted on AMActions !!!');
                 console.log(error);
             }
             console.error(error);
         };
 
         // Validate config
-        if (!config.validateObject || typeof config.validateObject !== "function") {
+        if (!config.validateObject || typeof config.validateObject !== 'function') {
             console.log('Your config', config);
-            throw new Error("Every action must have a validateObject function on config");
+            throw new Error('Every action must have a validateObject function on config');
         }
 
         if (!config.typePrefix || !config.endPoint || !config.defaultSort || !config.singularTitle || !config.pluralTitle) {
             console.log('Your config', config);
-            throw new Error("You must set your config! Please set at least: typePrefix, endPoint, defaultSort, singularTitle, pluralTitle");
+            throw new Error('You must set your config! Please set at least: typePrefix, endPoint, defaultSort, singularTitle, pluralTitle');
         }
 
         if (!config.cacheStrategy || ['CacheOnline', 'CacheEmptyOnline', 'Cache', 'Online'].indexOf(config.cacheStrategy) < 0) {
@@ -598,21 +598,25 @@ var AMCacheActions = function () {
 
     (0, _createClass3.default)(AMCacheActions, [{
         key: '_countFakeRecords',
-        value: function _countFakeRecords(result) {
+        value: function _countFakeRecords(records) {
             var _this2 = this;
 
             // count fake records
             this.syncRecords = [];
             // console.log("fakesCount", fakesCount);
-            this.syncRecordsCount = result.reduce(function (count, record) {
-                // console.log(record);
-                // console.log(record._id);
-                if (record && record._id && record._id.indexOf("fake") > -1) {
-                    _this2.syncRecords.push(record);
-                    return count + 1;
-                } else return count;
-            }, 0);
-            return this.syncRecordsCount;
+            if (!records) {
+                this.syncRecordsCount = 0;
+            } else {
+                this.syncRecordsCount = records.reduce(function (count, record) {
+                    // console.log(record);
+                    // console.log(record._id);
+                    if (record && record._id && record._id.indexOf('fake') > -1) {
+                        _this2.syncRecords.push(record);
+                        return count + 1;
+                    } else return count;
+                }, 0);
+                return this.syncRecordsCount;
+            }
         }
 
         // cache ok
@@ -714,8 +718,8 @@ var AMCacheActions = function () {
         value: function _dispatchDeleteObject(dispatch, id) {
             var _this4 = this;
 
-            console.log("constructorName", id.constructor.name);
-            if (id.constructor.name === "Array") {
+            console.log('constructorName', id.constructor.name);
+            if (id.constructor.name === 'Array') {
                 id.map(function (oId) {
                     dispatch({ type: _this4.type('DELETE_OBJECT'), payload: oId });
                 });

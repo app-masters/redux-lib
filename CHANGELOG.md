@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [1.0.13] - 2017-12-12
+### Fixed
+- Cache GetObject bug
+
 ## [1.0.10/1.0.12] - 2017-12-07
 ### Fixed
 - babel.rc dependencies added

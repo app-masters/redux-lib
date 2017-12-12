@@ -160,7 +160,11 @@ class AMCache {
                         return item._id === id;
                     });
                     // console.log('index', index);
-                    if (index > -1) { fulfill(data[index]); }
+                    if (index > -1) {
+                        fulfill(data[index]);
+                    } else {
+                        fulfill(null);
+                    }
                 }
             });
         });
