@@ -519,6 +519,9 @@ class AMCacheActions {
                     return this._deleteObject(id);
                 };
 
+                if (id.indexOf("fake") > -1)
+                    promessaOnline = null;
+
                 this.doSave(this.config.cacheStrategy, sempreRetornar, promessaCache, promessaOnline);
             } catch (error) {
                 this.onUncaught(err);

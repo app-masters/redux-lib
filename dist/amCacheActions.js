@@ -56,10 +56,15 @@ var AMCacheActions = function () {
             promiseCache().then(function (result) {
                 // console.log('1result', result);
                 alwaysReturn(result, true);
-                promiseOnline().then(function (result) {
+                if (promiseOnline) {
+                    promiseOnline().then(function (result) {
+                        // console.log('2result', result);
+                        alwaysReturn(result, false, true);
+                    });
+                } else {
                     // console.log('2result', result);
-                    alwaysReturn(result, false, true);
-                });
+                    alwaysReturn(result, true, true);
+                }
             }).catch(function (err) {
                 _this.onUncaught(err);
             });
@@ -171,9 +176,12 @@ var AMCacheActions = function () {
                     // Everymotherfuckercase
                     var sempreRetornar = function sempreRetornar(response, fromCache, final) {
                         if (final === true) _this.setLoading(dispatch, false, false, false);else if (fromCache === true) _this.setLoadingFrom(dispatch, 'CACHE', false);else if (fromCache === false) _this.setLoadingFrom(dispatch, 'ONLINE', false);else console.log('from where??');
-
                         // console.log("getObjects.sempreRetornar");
-                        _this.dispatchGetObjects(dispatch, response, fromCache, filter);
+
+                        // When using cache, always SHOW cache data, even when getting from API first
+                        var replaceAll = fromCache === false && !filter && _this.config.cacheStrategy !== 'CacheOnline';
+
+                        _this.dispatchGetObjects(dispatch, response, replaceAll, filter);
                     };
                     var promessaCache = function promessaCache() {
                         // console.log("getObjects.promessaCache");
@@ -623,7 +631,7 @@ var AMCacheActions = function () {
 
     }, {
         key: 'dispatchGetObjects',
-        value: function dispatchGetObjects(dispatch, response, fromCache, filter) {
+        value: function dispatchGetObjects(dispatch, response, replaceAll, filter) {
             var _this3 = this;
 
             // console.log('fromCache',fromCache);
@@ -639,8 +647,6 @@ var AMCacheActions = function () {
             } else {
                 // console.log('dispatchGetObjects', 'else');
 
-                // When using cache, always SHOW cache data, even when getting from API first
-                var replaceAll = fromCache === false && !filter;
                 // let replaceAll = true;
                 _cache2.default.addObjects(this.config.typePrefix, response, replaceAll).then(function (response) {
                     dispatch({ type: _this3.type('GET_OBJECTS'), payload: response });

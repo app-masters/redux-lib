@@ -46,7 +46,7 @@ var AMCache = function () {
                         cache = null;
                     }
 
-                    if (Object.prototype.toString.call(cache) !== '[object Array]' && !replaceAll) {
+                    if (cache && Object.prototype.toString.call(cache) !== '[object Array]' && !replaceAll) {
                         console.warn('cache are not an array of objects', typeof cache === 'undefined' ? 'undefined' : (0, _typeof3.default)(cache));
                         cache = null;
                         console.warn('cache will be null');
