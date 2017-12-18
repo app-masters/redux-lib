@@ -206,6 +206,8 @@ var AMCache = function () {
                         // console.log('index', index);
                         if (index > -1) {
                             fulfill(data[index]);
+                        } else {
+                            fulfill(null);
                         }
                     }
                 });

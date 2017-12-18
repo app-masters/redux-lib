@@ -55,10 +55,15 @@ class AMCacheActions {
         promiseCache().then(result => {
             // console.log('1result', result);
             alwaysReturn(result, true);
-            promiseOnline().then(result => {
+            if (promiseOnline) {
+                promiseOnline().then(result => {
+                    // console.log('2result', result);
+                    alwaysReturn(result, false, true);
+                });
+            } else {
                 // console.log('2result', result);
-                alwaysReturn(result, false, true);
-            });
+                alwaysReturn(result, true, true);
+            }
         }).catch(err => {
             this.onUncaught(err);
         });
@@ -205,9 +210,12 @@ class AMCacheActions {
                         this.setLoadingFrom(dispatch, 'ONLINE', false);
                     else
                         console.log('from where??');
-
                     // console.log("getObjects.sempreRetornar");
-                    this.dispatchGetObjects(dispatch, response, fromCache, filter);
+
+                    // When using cache, always SHOW cache data, even when getting from API first
+                    let replaceAll = fromCache === false && !filter && this.config.cacheStrategy !== 'CacheOnline';
+
+                    this.dispatchGetObjects(dispatch, response, replaceAll, filter);
                 };
                 let promessaCache = () => {
                     // console.log("getObjects.promessaCache");
@@ -227,7 +235,7 @@ class AMCacheActions {
         };
     };
 
-    dispatchGetObjects (dispatch, response, fromCache, filter) {
+    dispatchGetObjects(dispatch, response, replaceAll, filter) {
         // console.log('fromCache',fromCache);
         // console.log('filter',filter);
         if (Object.prototype.toString.call(response) === '[object Array]')
@@ -242,8 +250,6 @@ class AMCacheActions {
         } else {
             // console.log('dispatchGetObjects', 'else');
 
-            // When using cache, always SHOW cache data, even when getting from API first
-            let replaceAll = fromCache === false && !filter;
             // let replaceAll = true;
             AMCache.addObjects(this.config.typePrefix, response, replaceAll).then(response => {
                 dispatch({type: this.type('GET_OBJECTS'), payload: response});

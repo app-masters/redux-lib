@@ -17,7 +17,7 @@ class AMCache {
 
                 if (replaceAll) { cache = null; }
 
-                if (Object.prototype.toString.call(cache) !== '[object Array]' && !replaceAll) {
+                if (cache && Object.prototype.toString.call(cache) !== '[object Array]' && !replaceAll) {
                     console.warn('cache are not an array of objects', typeof cache);
                     cache = null;
                     console.warn('cache will be null');
