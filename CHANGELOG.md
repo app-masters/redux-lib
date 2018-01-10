@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [1.0.16] - 2017-01-10
+### Added
+- resetObjects in cacheActions
+
 ## [1.0.14/1.0.15] - 2017-12-18
 ### Fixed
 - Cache deleteObjects bug fixed

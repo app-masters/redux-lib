@@ -593,6 +593,12 @@ class AMCacheActions {
 
     }
 
+    resetObjects = () => {
+        return (dispatch) => {
+            dispatch({type: this.type('GET_OBJECTS'), payload: []})
+        };
+    };
+
     /* OTHER ACTIONS */
 
     inputChanged = (key, value) => {
