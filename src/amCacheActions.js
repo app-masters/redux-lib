@@ -213,7 +213,7 @@ class AMCacheActions {
                     // console.log("getObjects.sempreRetornar");
 
                     // When using cache, always SHOW cache data, even when getting from API first
-                    let replaceAll = fromCache === false && !filter && this.config.cacheStrategy !== 'CacheOnline';
+                    let replaceAll = fromCache === false && !filter;
 
                     this.dispatchGetObjects(dispatch, response, replaceAll, filter);
                 };
