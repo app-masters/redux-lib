@@ -43,6 +43,17 @@ class AMCache {
 
     static merge (cache, objects) {
         // Validate - objects are array? objects have _id on root element?
+        if (objects && objects.length > 0) {
+            objects = objects.map(object => {
+                if (!object._id) {
+                    return {_id: 'fake_' + new Date().getTime(), ...object};
+                }
+            });
+        } else {
+            if (objects && !objects._id) {
+                objects = {_id: 'fake_' + new Date().getTime(), ...objects};
+            }
+        }
 
         // console.log('cache', cache);
         if (!cache || cache.length === 0) {
@@ -53,11 +64,6 @@ class AMCache {
 
             // Walk throught objects merging by id
             objects.map(object => {
-                if (!object._id) {
-                    object._id = 'fake_' + new Date().getTime();
-                    // console.log('Id created', object._id);
-                }
-
                 // find on cache
                 let index = cache.findIndex(item => {
                     return item._id === object._id;

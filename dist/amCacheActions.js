@@ -179,7 +179,7 @@ var AMCacheActions = function () {
                         // console.log("getObjects.sempreRetornar");
 
                         // When using cache, always SHOW cache data, even when getting from API first
-                        var replaceAll = fromCache === false && !filter && _this.config.cacheStrategy !== 'CacheOnline';
+                        var replaceAll = fromCache === false && !filter;
 
                         _this.dispatchGetObjects(dispatch, response, replaceAll, filter);
                     };
@@ -373,6 +373,8 @@ var AMCacheActions = function () {
                         return _this._deleteObject(id);
                     };
 
+                    if (id.indexOf("fake") > -1) promessaOnline = null;
+
                     _this.doSave(_this.config.cacheStrategy, sempreRetornar, promessaCache, promessaOnline);
                 } catch (error) {
                     _this.onUncaught(err);
@@ -440,6 +442,12 @@ var AMCacheActions = function () {
                     _this.onUncaught(err);
                     _this.setError(dispatch, error);
                 }
+            };
+        };
+
+        this.resetObjects = function () {
+            return function (dispatch) {
+                dispatch({ type: _this.type('GET_OBJECTS'), payload: [] });
             };
         };
 

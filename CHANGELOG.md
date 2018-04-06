@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [1.0.18] - 2018-04-06
+### Fixed
+- Cache have fakeId even if no cache was defined before
+
 ## [1.0.17] - 2018-03-27
 ### Changed
 - AMCache.getObjects erase the cache on cacheOnline too
