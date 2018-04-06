@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
-## [1.0.18/1.0.19] - 2018-04-06
+## [1.0.18/1.0.20] - 2018-04-06
 ### Changed
 - AMCache.getObjects can keep the cache with 'persistCache' on config
 ### Fixed

@@ -48,6 +48,7 @@ class AMCache {
                 if (!object._id) {
                     return {_id: 'fake_' + new Date().getTime(), ...object};
                 }
+                return object;
             });
         } else {
             if (objects && !objects._id) {
