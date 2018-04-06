@@ -194,6 +194,7 @@ class AMCacheActions {
 
     // cache ok
     getObjects = (sort, populate, filter) => {
+
         return (dispatch) => {
             try {
                 this.setLoading(dispatch, true, this.config.cacheStrategy !== 'Online', this.config.cacheStrategy !== 'Cache');
@@ -213,7 +214,8 @@ class AMCacheActions {
                     // console.log("getObjects.sempreRetornar");
 
                     // When using cache, always SHOW cache data, even when getting from API first
-                    let replaceAll = fromCache === false && !filter;
+                    const persistCache = !this.config.persistCache && this.config.cacheStrategy === 'CacheOnline'; // Cache is the truth
+                    let replaceAll = fromCache === false && !filter && persistCache;
 
                     this.dispatchGetObjects(dispatch, response, replaceAll, filter);
                 };

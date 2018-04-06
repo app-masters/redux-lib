@@ -4,6 +4,10 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
+var _extends2 = require('babel-runtime/helpers/extends');
+
+var _extends3 = _interopRequireDefault(_extends2);
+
 var _typeof2 = require('babel-runtime/helpers/typeof');
 
 var _typeof3 = _interopRequireDefault(_typeof2);
@@ -76,6 +80,17 @@ var AMCache = function () {
         key: 'merge',
         value: function merge(cache, objects) {
             // Validate - objects are array? objects have _id on root element?
+            if (objects && objects.length > 0) {
+                objects = objects.map(function (object) {
+                    if (!object._id) {
+                        return (0, _extends3.default)({ _id: 'fake_' + new Date().getTime() }, object);
+                    }
+                });
+            } else {
+                if (objects && !objects._id) {
+                    objects = (0, _extends3.default)({ _id: 'fake_' + new Date().getTime() }, objects);
+                }
+            }
 
             // console.log('cache', cache);
             if (!cache || cache.length === 0) {
@@ -86,11 +101,6 @@ var AMCache = function () {
 
                 // Walk throught objects merging by id
                 objects.map(function (object) {
-                    if (!object._id) {
-                        object._id = 'fake_' + new Date().getTime();
-                        // console.log('Id created', object._id);
-                    }
-
                     // find on cache
                     var index = cache.findIndex(function (item) {
                         return item._id === object._id;
