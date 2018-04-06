@@ -85,11 +85,8 @@ var AMCache = function () {
                     if (!object._id) {
                         return (0, _extends3.default)({ _id: 'fake_' + new Date().getTime() }, object);
                     }
+                    return object;
                 });
-            } else {
-                if (objects && !objects._id) {
-                    objects = (0, _extends3.default)({ _id: 'fake_' + new Date().getTime() }, objects);
-                }
             }
 
             // console.log('cache', cache);

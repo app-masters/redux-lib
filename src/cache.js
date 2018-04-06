@@ -50,10 +50,6 @@ class AMCache {
                 }
                 return object;
             });
-        } else {
-            if (objects && !objects._id) {
-                objects = {_id: 'fake_' + new Date().getTime(), ...objects};
-            }
         }
 
         // console.log('cache', cache);
