@@ -137,11 +137,13 @@ class AMActions {
 
     createObject = (input) => {
         // console.log('createObject ' + input);
+        const sufix = this.config.createSufix || '';
+
         return (dispatch) => {
             input = this.prepareToServer(input);
             this.setLoading(dispatch, true);
             this.setError(dispatch, null);
-            Http.post(this.config.endPoint, input)
+            Http.post(this.config.endPoint + sufix, input)
                 .then(response => {
                     dispatch({type: this.type('CREATE_OBJECT'), payload: this.prepareToClient(response)});
                     dispatch({type: this.type('SAVE_OBJECT'), payload: this.prepareToClient(response)});
@@ -158,10 +160,13 @@ class AMActions {
     updateObject = (input) => {
         // console.log('updateObject ', input);
         return (dispatch) => {
+            const sufix = this.config.updateSufix || '';
+            
             input = this.prepareToServer(input);
             this.setLoading(dispatch, true);
             this.setError(dispatch, null);
-            Http.put(this.config.endPoint + input._id, input)
+            
+            Http.put(this.config.endPoint + input._id + sufix, input)
                 .then(response => {
                     dispatch({type: this.type('UPDATE_OBJECT'), payload: this.prepareToClient(response)});
                     dispatch({type: this.type('SAVE_OBJECT'), payload: this.prepareToClient(response)});
@@ -177,8 +182,10 @@ class AMActions {
 
     deleteObject = (id) => {
         return (dispatch) => {
+            const sufix = this.config.deleteSufix || '';
+
             this.setError(dispatch, null);
-            Http.delete(this.config.endPoint + id)
+            Http.delete(this.config.endPoint + id + sufix)
                 .then(() => {
                     dispatch({type: this.type('DELETE_OBJECT'), payload: id});
                 })
