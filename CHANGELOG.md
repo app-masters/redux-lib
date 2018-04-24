@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [1.0.22] - 2018-04-24
+### Changed
+- AmActions and AMCache actions config now accepts optional updateSufix, createSufix, deleteSufix parameters.
+
 ## [1.0.18/1.0.21] - 2018-04-06
 ### Changed
 - AMCache.getObjects can keep the cache with 'persistCache' on config
