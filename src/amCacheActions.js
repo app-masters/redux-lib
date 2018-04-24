@@ -425,7 +425,8 @@ class AMCacheActions {
     };
 
     _createObject = (input) => {
-        return Http.post(this.config.endPoint, input);
+        const sufix = this.config.createSufix || '';
+        return Http.post(this.config.endPoint + sufix, input);
     };
 
     /* UPDATE */
@@ -478,7 +479,8 @@ class AMCacheActions {
     };
 
     _updateObject (id, input) {
-        return Http.put(this.config.endPoint + id, input);
+        const sufix = this.config.updateSufix || '';
+        return Http.put(this.config.endPoint + id + sufix, input);
     }
 
     dispatchSaveObject (dispatch, response, secondaryAction) {
@@ -580,7 +582,8 @@ class AMCacheActions {
     };
 
     _deleteObject (id) {
-        return Http.delete(this.config.endPoint + id);
+        const sufix = this.config.deleteSufix || '';
+        return Http.delete(this.config.endPoint + id + sufix);
     }
 
     _dispatchDeleteObject (dispatch, id) {
