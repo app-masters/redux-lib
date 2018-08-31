@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [1.0.23] - 2018-08-31
+### Changed
+- Cache only create fake_id for valid objects
+
 ## [1.0.22] - 2018-04-24
 ### Changed
 - AmActions and AMCache actions config now accepts optional updateSufix, createSufix, deleteSufix parameters.

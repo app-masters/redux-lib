@@ -45,7 +45,7 @@ class AMCache {
         // Validate - objects are array? objects have _id on root element?
         if (objects && objects.length > 0) {
             objects = objects.map(object => {
-                if (!object._id) {
+                if (Object.keys(object).length > 0 && !object._id) {
                     return {_id: 'fake_' + new Date().getTime(), ...object};
                 }
                 return object;
