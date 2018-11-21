@@ -56,6 +56,7 @@ class AMActions {
             }
             Http.get(url)
                 .then(response => {
+                    if(!Array.isArray(response) && response.data) response = response.data;
                         response = response.map(item => this.prepareToClient(item));
                         dispatch({type: this.type('GET_OBJECTS'), payload: response});
                         this.setLoading(dispatch, false);
