@@ -72,8 +72,8 @@ class AMActions {
 
     getObject = (id, populate) => {
         return (dispatch) => {
-            let {endpoint} = this.config;
-            if(endpoint.slice(-1) !== '/') endpoint = endpoint + '/'
+            let {endPoint} = this.config;
+            if(endPoint.slice(-1) !== '/') endPoint = endPoint + '/'
             let url = endPoint + id;
             if (populate !== false) {
                 populate = (populate ? populate : this.config.defaultPopulate);
