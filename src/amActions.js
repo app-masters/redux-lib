@@ -56,7 +56,8 @@ class AMActions {
             }
             Http.get(url)
                 .then(response => {
-                    if(!Array.isArray(response) && response.data) response = response.data;
+                    const keys = Objecy.keys(response);
+                    if(!Array.isArray(response) && response.data && keys.length === 1 && keys[0] === 'data') response = response.data;
                         response = response.map(item => this.prepareToClient(item));
                         dispatch({type: this.type('GET_OBJECTS'), payload: response});
                         this.setLoading(dispatch, false);
@@ -71,7 +72,9 @@ class AMActions {
 
     getObject = (id, populate) => {
         return (dispatch) => {
-            let url = this.config.endPoint + id;
+            let {endpoint} = this.config;
+            if(endpoint.slice(-1) !== '/') endpoint = endpoint + '/'
+            let url = endPoint + id;
             if (populate !== false) {
                 populate = (populate ? populate : this.config.defaultPopulate);
                 url += '?populate=' + populate;
