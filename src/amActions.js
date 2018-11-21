@@ -56,7 +56,7 @@ class AMActions {
             }
             Http.get(url)
                 .then(response => {
-                    const keys = Objecy.keys(response);
+                    const keys = Object.keys(response);
                     if(!Array.isArray(response) && response.data && keys.length === 1 && keys[0] === 'data') response = response.data;
                         response = response.map(item => this.prepareToClient(item));
                         dispatch({type: this.type('GET_OBJECTS'), payload: response});
