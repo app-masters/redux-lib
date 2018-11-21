@@ -169,8 +169,9 @@ class AMActions {
             input = this.prepareToServer(input);
             this.setLoading(dispatch, true);
             this.setError(dispatch, null);
-            
-            Http.put(this.config.endPoint + input._id + sufix, input)
+            let {endPoint} = this.config;
+            if(endPoint.slice(-1) !== '/') endPoint = endPoint + '/'
+            Http.put(endPoint + input._id + sufix, input)
                 .then(response => {
                     dispatch({type: this.type('UPDATE_OBJECT'), payload: this.prepareToClient(response)});
                     dispatch({type: this.type('SAVE_OBJECT'), payload: this.prepareToClient(response)});
@@ -187,9 +188,10 @@ class AMActions {
     deleteObject = (id) => {
         return (dispatch) => {
             const sufix = this.config.deleteSufix || '';
-
+            let {endPoint} = this.config;
+            if(endPoint.slice(-1) !== '/') endPoint = endPoint + '/'
             this.setError(dispatch, null);
-            Http.delete(this.config.endPoint + id + sufix)
+            Http.delete(endPoint + id + sufix)
                 .then(() => {
                     dispatch({type: this.type('DELETE_OBJECT'), payload: id});
                 })
