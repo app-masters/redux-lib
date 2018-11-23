@@ -165,13 +165,20 @@ class AMActions {
         // console.log('updateObject ', input);
         return (dispatch) => {
             const sufix = this.config.updateSufix || '';
-            
+            let id;
+            if('_id' in input) {
+                id = input._id;
+            } else {
+                id = input.id;
+                delete input.id;
+            }
+            console.log('works >>>>>>>>>>>>>>>>>.', id);
             input = this.prepareToServer(input);
             this.setLoading(dispatch, true);
             this.setError(dispatch, null);
             let {endPoint} = this.config;
             if(endPoint.slice(-1) !== '/') endPoint = endPoint + '/'
-            Http.put(endPoint + input._id + sufix, input)
+            Http.put(endPoint + id + sufix, input)
                 .then(response => {
                     dispatch({type: this.type('UPDATE_OBJECT'), payload: this.prepareToClient(response)});
                     dispatch({type: this.type('SAVE_OBJECT'), payload: this.prepareToClient(response)});
