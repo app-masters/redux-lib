@@ -165,6 +165,7 @@ class AMActions {
         // console.log('updateObject ', input);
         return (dispatch) => {
             const sufix = this.config.updateSufix || '';
+            input = this.prepareToServer(input);
             let id;
             if('_id' in input) {
                 id = input._id;
@@ -172,8 +173,6 @@ class AMActions {
                 id = input.id;
                 delete input.id;
             }
-            console.log('works >>>>>>>>>>>>>>>>>.', id);
-            input = this.prepareToServer(input);
             this.setLoading(dispatch, true);
             this.setError(dispatch, null);
             let {endPoint} = this.config;
