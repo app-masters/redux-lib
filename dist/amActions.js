@@ -108,6 +108,8 @@ function () {
         });
 
         _jsLib.Http.get(url).then(function (response) {
+          var keys = Object.keys(response);
+          if (response.data && keys.length === 1 && keys[0] === 'data') response = response.data;
           dispatch({
             type: _this.type('GET_OBJECT'),
             payload: _this.prepareToClient(response)
@@ -208,6 +210,7 @@ function () {
       // console.log('updateObject ', input);
       return function (dispatch) {
         var sufix = _this.config.updateSufix || '';
+        input = _this.prepareToServer(input);
         var id;
 
         if ('_id' in input) {
@@ -216,9 +219,6 @@ function () {
           id = input.id;
           delete input.id;
         }
-
-        console.log('works >>>>>>>>>>>>>>>>>.', id);
-        input = _this.prepareToServer(input);
 
         _this.setLoading(dispatch, true);
 

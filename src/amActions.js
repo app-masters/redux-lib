@@ -84,6 +84,8 @@ class AMActions {
             dispatch({type: this.type('NEW_OBJECT'), payload: {}});
             Http.get(url)
                 .then(response => {
+                    const keys = Object.keys(response);
+                    if(response.data && keys.length === 1 && keys[0] === 'data') response = response.data;
                     dispatch({type: this.type('GET_OBJECT'), payload: this.prepareToClient(response)});
                     this.setLoading(dispatch, false);
                 })
