@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [1.0.34] - 2018-12-20
+### Changed
+- Added config parameter 'nestedKey' to AMActions
+
 ## [1.0.26] - 2018-08-31
 ### Changed
 - Safer data support and getObjects fix for routes that dont end with '/'
