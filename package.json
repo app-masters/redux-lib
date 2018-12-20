@@ -1,6 +1,6 @@
 {
   "name": "@app-masters/redux-lib",
-  "version": "1.0.34",
+  "version": "1.0.35",
   "description": "",
   "main": "dist/index.js",
   "scripts": {
@@ -13,6 +13,9 @@
   "dependencies": {
     "@app-masters/js-lib": "^1.0.8",
     "events": "^1.1.1"
+  },
+  "peerDependencies": {
+    "lodash": "x.x.x"
   },
   "repository": {
     "type": "git",

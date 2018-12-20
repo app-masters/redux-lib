@@ -21,6 +21,8 @@ var _jsLib = require("@app-masters/js-lib");
 
 var _cache = _interopRequireDefault(require("./cache"));
 
+var _get = _interopRequireDefault(require("lodash/get"));
+
 var AMCacheActions =
 /*#__PURE__*/
 function () {
@@ -318,7 +320,13 @@ function () {
     });
     (0, _defineProperty2.default)(this, "_createObject", function (input) {
       var sufix = _this.config.createSufix || '';
-      return _jsLib.Http.post(_this.config.endPoint + sufix, input);
+      return _jsLib.Http.post(_this.config.endPoint + sufix, input).then(function (response) {
+        if (_this.config.nestedKey) {
+          return (0, _get.default)(response, _this.config.nestedKey);
+        } else {
+          return response;
+        }
+      });
     });
     (0, _defineProperty2.default)(this, "updateObject", function (input, justCache) {
       // console.log('updateObject ' + input);
@@ -683,6 +691,8 @@ function () {
   }, {
     key: "_getObjects",
     value: function _getObjects(sort, populate, filter) {
+      var _this4 = this;
+
       var url = this.config.endPoint;
       sort = sort ? sort : this.config.defaultSort;
       populate = populate ? populate : this.config.defaultPopulate;
@@ -693,13 +703,21 @@ function () {
       }
 
       if (filter) url += '&' + filter;
-      return _jsLib.Http.get(url);
+      return _jsLib.Http.get(url).then(function (response) {
+        if (_this4.config.nestedKey) {
+          return (0, _get.default)(response, _this4.config.nestedKey);
+        } else {
+          return response;
+        }
+      });
     }
     /* GET OBJECTS */
 
   }, {
     key: "_getObject",
     value: function _getObject(id, populate) {
+      var _this5 = this;
+
       var url = this.config.endPoint + id;
 
       if (populate !== false) {
@@ -707,7 +725,13 @@ function () {
         url += '?populate=' + populate;
       }
 
-      return _jsLib.Http.get(url);
+      return _jsLib.Http.get(url).then(function (response) {
+        if (_this5.config.nestedKey) {
+          return (0, _get.default)(response, _this5.config.nestedKey);
+        } else {
+          return response;
+        }
+      });
     }
   }, {
     key: "dispatchGetObject",
@@ -736,8 +760,16 @@ function () {
   }, {
     key: "_updateObject",
     value: function _updateObject(id, input) {
+      var _this6 = this;
+
       var sufix = this.config.updateSufix || '';
-      return _jsLib.Http.put(this.config.endPoint + id + sufix, input);
+      return _jsLib.Http.put(this.config.endPoint + id + sufix, input).then(function (response) {
+        if (_this6.config.nestedKey) {
+          return (0, _get.default)(response, _this6.config.nestedKey);
+        } else {
+          return response;
+        }
+      });
     }
   }, {
     key: "dispatchSaveObject",
@@ -758,20 +790,28 @@ function () {
   }, {
     key: "_deleteObject",
     value: function _deleteObject(id) {
+      var _this7 = this;
+
       var sufix = this.config.deleteSufix || '';
-      return _jsLib.Http.delete(this.config.endPoint + id + sufix);
+      return _jsLib.Http.delete(this.config.endPoint + id + sufix).then(function (response) {
+        if (_this7.config.nestedKey) {
+          return (0, _get.default)(response, _this7.config.nestedKey);
+        } else {
+          return response;
+        }
+      });
     }
   }, {
     key: "_dispatchDeleteObject",
     value: function _dispatchDeleteObject(dispatch, id) {
-      var _this4 = this;
+      var _this8 = this;
 
       console.log('constructorName', id.constructor.name);
 
       if (id.constructor.name === 'Array') {
         id.map(function (oId) {
           dispatch({
-            type: _this4.type('DELETE_OBJECT'),
+            type: _this8.type('DELETE_OBJECT'),
             payload: oId
           });
         });

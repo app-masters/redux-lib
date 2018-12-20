@@ -69,8 +69,16 @@ function () {
         }
 
         _jsLib.Http.get(url).then(function (response) {
-          var keys = Object.keys(response);
-          if (!Array.isArray(response) && response.data && keys.length === 1 && keys[0] === 'data') response = response.data;
+          if (!_this.config.nestedKey) {
+            var keys = Object.keys(response);
+
+            if (!Array.isArray(response) && response.data && keys.length === 1 && keys[0] === 'data') {
+              response = response.data;
+            }
+          } else {
+            response = response[_this.config.nestedKey];
+          }
+
           response = response.map(function (item) {
             return _this.prepareToClient(item);
           });
@@ -108,8 +116,13 @@ function () {
         });
 
         _jsLib.Http.get(url).then(function (response) {
-          var keys = Object.keys(response);
-          if (response.data && keys.length === 1 && keys[0] === 'data') response = response.data;
+          if (!_this.config.nestedKey) {
+            var keys = Object.keys(response);
+            if (response.data && keys.length === 1 && keys[0] === 'data') response = response.data;
+          } else {
+            response = response[_this.config.nestedKey];
+          }
+
           dispatch({
             type: _this.type('GET_OBJECT'),
             payload: _this.prepareToClient(response)
@@ -187,6 +200,10 @@ function () {
         _this.setError(dispatch, null);
 
         _jsLib.Http.post(_this.config.endPoint + sufix, input).then(function (response) {
+          if (_this.config.nestedKey) {
+            response = response[_this.config.nestedKey];
+          }
+
           dispatch({
             type: _this.type('CREATE_OBJECT'),
             payload: _this.prepareToClient(response)
@@ -228,6 +245,10 @@ function () {
         if (endPoint.slice(-1) !== '/') endPoint = endPoint + '/';
 
         _jsLib.Http.put(endPoint + id + sufix, input).then(function (response) {
+          if (_this.config.nestedKey) {
+            response = response[_this.config.nestedKey];
+          }
+
           dispatch({
             type: _this.type('UPDATE_OBJECT'),
             payload: _this.prepareToClient(response)

@@ -1,5 +1,6 @@
 import { Http } from '@app-masters/js-lib';
 import AMCache from './cache';
+import get from 'lodash/get';
 
 class AMCacheActions {
     constructor (config) {
@@ -270,7 +271,13 @@ class AMCacheActions {
         }
         if (filter)
             url += '&' + filter;
-        return Http.get(url);
+        return Http.get(url).then(response => {
+            if(this.config.nestedKey){
+                return get(response, this.config.nestedKey);
+            } else {
+                return response;
+            }
+        });
     }
 
     /* GET OBJECTS */
@@ -321,7 +328,13 @@ class AMCacheActions {
             populate = (populate ? populate : this.config.defaultPopulate);
             url += '?populate=' + populate;
         }
-        return Http.get(url);
+        return Http.get(url).then(response => {
+            if(this.config.nestedKey){
+                return get(response, this.config.nestedKey);
+            } else {
+                return response;
+            }
+        });
     }
 
     dispatchGetObject (dispatch, response, fromCache) {
@@ -426,7 +439,13 @@ class AMCacheActions {
 
     _createObject = (input) => {
         const sufix = this.config.createSufix || '';
-        return Http.post(this.config.endPoint + sufix, input);
+        return Http.post(this.config.endPoint + sufix, input).then(response => {
+            if(this.config.nestedKey){
+                return get(response, this.config.nestedKey);
+            } else {
+                return response;
+            }
+        });
     };
 
     /* UPDATE */
@@ -480,7 +499,13 @@ class AMCacheActions {
 
     _updateObject (id, input) {
         const sufix = this.config.updateSufix || '';
-        return Http.put(this.config.endPoint + id + sufix, input);
+        return Http.put(this.config.endPoint + id + sufix, input).then(response => {
+            if(this.config.nestedKey){
+                return get(response, this.config.nestedKey);
+            } else {
+                return response;
+            }
+        });
     }
 
     dispatchSaveObject (dispatch, response, secondaryAction) {
@@ -583,7 +608,13 @@ class AMCacheActions {
 
     _deleteObject (id) {
         const sufix = this.config.deleteSufix || '';
-        return Http.delete(this.config.endPoint + id + sufix);
+        return Http.delete(this.config.endPoint + id + sufix).then(response => {
+            if(this.config.nestedKey){
+                return get(response, this.config.nestedKey);
+            } else {
+                return response;
+            }
+        });
     }
 
     _dispatchDeleteObject (dispatch, id) {
