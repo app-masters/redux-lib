@@ -12,8 +12,10 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@app-masters/js-lib": "^1.2.14",
     "events": "^1.1.1"
+  },
+  "peerDependencies": {
+    "lodash": "x.x.x"
   },
   "repository": {
     "type": "git",

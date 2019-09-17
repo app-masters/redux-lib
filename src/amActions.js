@@ -56,9 +56,17 @@ class AMActions {
             }
             Http.get(url)
                 .then(response => {
-                        response = response.map(item => this.prepareToClient(item));
-                        dispatch({type: this.type('GET_OBJECTS'), payload: response});
-                        this.setLoading(dispatch, false);
+                    if(!this.config.nestedKey){
+                        const keys = Object.keys(response);
+                        if(!Array.isArray(response) && response.data && keys.length === 1 && keys[0] === 'data') {
+                            response = response.data;
+                        }
+                    } else {
+                        response = response[this.config.nestedKey]
+                    }
+                    response = response.map(item => this.prepareToClient(item));
+                    dispatch({type: this.type('GET_OBJECTS'), payload: response});
+                    this.setLoading(dispatch, false);
                     }
                 )
                 .catch(error => {
@@ -70,7 +78,9 @@ class AMActions {
 
     getObject = (id, populate) => {
         return (dispatch) => {
-            let url = this.config.endPoint + id;
+            let {endPoint} = this.config;
+            if(endPoint.slice(-1) !== '/') endPoint = endPoint + '/'
+            let url = endPoint + id;
             if (populate !== false) {
                 populate = (populate ? populate : this.config.defaultPopulate);
                 url += '?populate=' + populate;
@@ -80,6 +90,12 @@ class AMActions {
             dispatch({type: this.type('NEW_OBJECT'), payload: {}});
             Http.get(url)
                 .then(response => {
+                    if(!this.config.nestedKey){
+                        const keys = Object.keys(response);
+                        if(response.data && keys.length === 1 && keys[0] === 'data') response = response.data;
+                    } else {
+                        response = response[this.config.nestedKey]
+                    }
                     dispatch({type: this.type('GET_OBJECT'), payload: this.prepareToClient(response)});
                     this.setLoading(dispatch, false);
                 })
@@ -137,12 +153,17 @@ class AMActions {
 
     createObject = (input) => {
         // console.log('createObject ' + input);
+        const sufix = this.config.createSufix || '';
+
         return (dispatch) => {
             input = this.prepareToServer(input);
             this.setLoading(dispatch, true);
             this.setError(dispatch, null);
-            Http.post(this.config.endPoint, input)
+            Http.post(this.config.endPoint + sufix, input)
                 .then(response => {
+                    if(this.config.nestedKey){
+                        response = response[this.config.nestedKey]
+                    }
                     dispatch({type: this.type('CREATE_OBJECT'), payload: this.prepareToClient(response)});
                     dispatch({type: this.type('SAVE_OBJECT'), payload: this.prepareToClient(response)});
                     this.setLoading(dispatch, false);
@@ -158,11 +179,24 @@ class AMActions {
     updateObject = (input) => {
         // console.log('updateObject ', input);
         return (dispatch) => {
+            const sufix = this.config.updateSufix || '';
             input = this.prepareToServer(input);
+            let id;
+            if('_id' in input) {
+                id = input._id;
+            } else {
+                id = input.id;
+                delete input.id;
+            }
             this.setLoading(dispatch, true);
             this.setError(dispatch, null);
-            Http.put(this.config.endPoint + input._id, input)
+            let {endPoint} = this.config;
+            if(endPoint.slice(-1) !== '/') endPoint = endPoint + '/'
+            Http.put(endPoint + id + sufix, input)
                 .then(response => {
+                    if(this.config.nestedKey){
+                        response = response[this.config.nestedKey]
+                    }
                     dispatch({type: this.type('UPDATE_OBJECT'), payload: this.prepareToClient(response)});
                     dispatch({type: this.type('SAVE_OBJECT'), payload: this.prepareToClient(response)});
                     this.setLoading(dispatch, false);
@@ -177,8 +211,11 @@ class AMActions {
 
     deleteObject = (id) => {
         return (dispatch) => {
+            const sufix = this.config.deleteSufix || '';
+            let {endPoint} = this.config;
+            if(endPoint.slice(-1) !== '/') endPoint = endPoint + '/'
             this.setError(dispatch, null);
-            Http.delete(this.config.endPoint + id)
+            Http.delete(endPoint + id + sufix)
                 .then(() => {
                     dispatch({type: this.type('DELETE_OBJECT'), payload: id});
                 })
