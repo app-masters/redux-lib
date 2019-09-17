@@ -709,6 +709,9 @@ class AMCacheActions {
     }
 
     onUncaught = (error) => {
+        // Error already handled on another error handler??
+        if (error.sentToAnotherErrorHandler)
+            return;
         if (AMCacheActions.onUncaught) {
             AMCacheActions.onUncaught(error);
         } else {

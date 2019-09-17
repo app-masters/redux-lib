@@ -5,13 +5,14 @@
   "main": "dist/index.js",
   "scripts": {
     "build": "rm -rf dist/ && babel src/ -d dist",
+    "ncu": "ncu -u -a @app-masters/js-lib && npm install",
     "prepublish": "npm run build",
     "postinstall": "echo \"You don't need wait for builds on redux-lib anymore. Give thanks to @TiagoGouvea!\" "
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@app-masters/js-lib": "^1.0.8",
+    "@app-masters/js-lib": "^1.2.14",
     "events": "^1.1.1"
   },
   "repository": {
